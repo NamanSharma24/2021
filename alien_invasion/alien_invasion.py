@@ -1,3 +1,8 @@
+############################
+# Alien Invasion Game
+# Copyright : Naman Sharma
+# 
+#
 import sys 
 import pygame
 from ai_setting import Settings

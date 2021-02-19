@@ -6,6 +6,8 @@
 import sys 
 import pygame
 from time import sleep
+      
+
 
 from settings import Settings
 from ship import Ship
@@ -16,23 +18,36 @@ from button import Button
 from scoreboard import Scoreboard
 import sound_effects as se
 
-
-
 class AlienInvasion:
-
+   
     def __init__ (self):
         pygame.init()
+        
         self.settings = Settings()
         self.screen = pygame.display.set_mode ((self.settings.screen_width, self.settings.screen_height))
         pygame.display.set_caption("Alien Invasion")
         self.stats = GameStats(self)
+        self.high_score = 0
+
+        with open('high_score.txt', 'r') as f:
+            
+            try:
+                self.high_score = int(f.read())
+            
+            except:
+                self.high_score = 0
+        
+        self.stats.sethighscore(self.high_score)
         self.sb = Scoreboard(self)
+        
+        # self.sb.show_score()
         self.ship = Ship(self)
         self.bullets = pygame.sprite.Group()
         self.aliens = pygame.sprite.Group()
         self._create_fleet()
         self.play_button = Button(self, "Play")
-
+        self.stats.s  = self.high_score
+    
     def _create_fleet(self):
         
         alien = Alien(self)
@@ -46,7 +61,7 @@ class AlienInvasion:
         for row_number in range(number_rows):
             for alien_number in range(number_aliens_x):
                 self._create_alien(alien_number, row_number)
-        
+
     def _create_alien(self, alien_number, row_number):
 
         alien = Alien(self)
@@ -59,6 +74,7 @@ class AlienInvasion:
     def run_game(self): 
         while True:
             self._check_events()
+            self.sb.show_score
             if self.stats.game_active:
                 self.ship.update()
                 self.bullets.update()
@@ -188,6 +204,7 @@ class AlienInvasion:
         if pygame.sprite.spritecollideany(self.ship, self.aliens):
             self._ship_hit()
         self._check_aliens_bottom()
+
 
 if __name__ == "__main__":
     ai = AlienInvasion()
